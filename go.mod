@@ -1,3 +1,3 @@
-module github.com/listenGrey/linkedList
+module linkedList
 
 go 1.20

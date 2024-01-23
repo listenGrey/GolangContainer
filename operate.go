@@ -3,24 +3,32 @@ package linkedList
 import (
 	"errors"
 	"fmt"
-	"linkedList/structure"
 )
 
-type cloneList struct {
-	oriList *structure.LinkedList
-	resList *structure.LinkedList
+type Node struct {
+	Val  interface{}
+	Next *Node
 }
 
-func Constructor(val interface{}) *structure.LinkedList {
-	var list structure.LinkedList
-	newNode := &structure.Node{Val: val, Next: nil}
+type LinkedList struct {
+	Head *Node
+}
+
+type cloneList struct {
+	oriList *LinkedList
+	resList *LinkedList
+}
+
+func Constructor(val interface{}) *LinkedList {
+	var list LinkedList
+	newNode := &Node{Val: val, Next: nil}
 	if list.Head == nil {
 		list.Head = newNode
 	}
 	return &list
 }
 
-func Print(list *structure.LinkedList) {
+func Print(list *LinkedList) {
 	cur := list.Head
 	for cur != nil && cur.Next != nil {
 		fmt.Printf("%v -> ", cur.Val)
@@ -31,7 +39,7 @@ func Print(list *structure.LinkedList) {
 	}
 }
 
-func Split(list *structure.LinkedList) (*structure.LinkedList, *structure.LinkedList) {
+func Split(list *LinkedList) (*LinkedList, *LinkedList) {
 	if list.Head == nil || list.Head.Next == nil {
 		return list, nil
 	}
@@ -39,7 +47,7 @@ func Split(list *structure.LinkedList) (*structure.LinkedList, *structure.Linked
 	slow := list.Head
 	fast := list.Head
 
-	var preList *structure.Node
+	var preList *Node
 
 	for fast != nil && fast.Next != nil {
 		preList = slow
@@ -51,13 +59,13 @@ func Split(list *structure.LinkedList) (*structure.LinkedList, *structure.Linked
 		preList.Next = nil
 	}
 
-	list1 := &structure.LinkedList{Head: list.Head}
-	list2 := &structure.LinkedList{Head: slow}
+	list1 := &LinkedList{Head: list.Head}
+	list2 := &LinkedList{Head: slow}
 
 	return list1, list2
 }
 
-func SearchByValue(list *structure.LinkedList, val interface{}, equals func(interface{}, interface{}) bool) (bool, error) {
+func SearchByValue(list *LinkedList, val interface{}, equals func(interface{}, interface{}) bool) (bool, error) {
 	if equals == nil {
 		return false, errors.New("need a comparative function")
 	}
@@ -72,7 +80,7 @@ func SearchByValue(list *structure.LinkedList, val interface{}, equals func(inte
 	return false, nil
 }
 
-func SearchByIndex(list *structure.LinkedList, index int) (*structure.Node, error) {
+func SearchByIndex(list *LinkedList, index int) (*Node, error) {
 	if index < 0 {
 		return nil, errors.New("index must >= 0")
 	}
@@ -88,13 +96,13 @@ func SearchByIndex(list *structure.LinkedList, index int) (*structure.Node, erro
 	return cur, nil
 }
 
-func Reverse(list *structure.LinkedList) error {
+func Reverse(list *LinkedList) error {
 	if list == nil {
 		return errors.New("this is an empty list")
 	}
-	var pre *structure.Node = nil
+	var pre *Node = nil
 	cur := list.Head
-	var next *structure.Node = nil
+	var next *Node = nil
 
 	for cur != nil {
 		next = cur.Next
@@ -106,7 +114,7 @@ func Reverse(list *structure.LinkedList) error {
 	return nil
 }
 
-func RemoveAtHead(list *structure.LinkedList) error {
+func RemoveAtHead(list *LinkedList) error {
 	if list.Head == nil {
 		return errors.New("this is an empty list")
 	}
@@ -114,7 +122,7 @@ func RemoveAtHead(list *structure.LinkedList) error {
 	return nil
 }
 
-func RemoveAtTail(list *structure.LinkedList) error {
+func RemoveAtTail(list *LinkedList) error {
 	if list.Head == nil {
 		return errors.New("this is an empty list")
 	}
@@ -130,7 +138,7 @@ func RemoveAtTail(list *structure.LinkedList) error {
 	return nil
 }
 
-func RemoveByIndex(list *structure.LinkedList, index int) error {
+func RemoveByIndex(list *LinkedList, index int) error {
 	if index < 0 {
 		return errors.New("index must >= 0")
 	}
@@ -155,7 +163,7 @@ func RemoveByIndex(list *structure.LinkedList, index int) error {
 	return nil
 }
 
-func RemoveByValue(list *structure.LinkedList, val interface{}, equals func(interface{}, interface{}) bool) error {
+func RemoveByValue(list *LinkedList, val interface{}, equals func(interface{}, interface{}) bool) error {
 	if equals == nil {
 		return errors.New("need a comparative function")
 	}
@@ -179,7 +187,7 @@ func RemoveByValue(list *structure.LinkedList, val interface{}, equals func(inte
 	return nil
 }
 
-func Len(list *structure.LinkedList) int {
+func Len(list *LinkedList) int {
 	length := 0
 	cur := list.Head
 
@@ -191,13 +199,13 @@ func Len(list *structure.LinkedList) int {
 	return length
 }
 
-func InsertAtHead(list *structure.LinkedList, val interface{}) {
-	newNode := &structure.Node{Val: val, Next: list.Head}
+func InsertAtHead(list *LinkedList, val interface{}) {
+	newNode := &Node{Val: val, Next: list.Head}
 	list.Head = newNode
 }
 
-func InsertAtTail(list *structure.LinkedList, val interface{}) {
-	newNode := &structure.Node{Val: val, Next: nil}
+func InsertAtTail(list *LinkedList, val interface{}) {
+	newNode := &Node{Val: val, Next: nil}
 	if list.Head == nil { // if input linked list is null, new node is head node
 		list.Head = newNode
 		return
@@ -209,8 +217,8 @@ func InsertAtTail(list *structure.LinkedList, val interface{}) {
 	cur.Next = newNode
 }
 
-func InsertAtIndex(list *structure.LinkedList, val interface{}, index int) {
-	newNode := &structure.Node{Val: val, Next: nil}
+func InsertAtIndex(list *LinkedList, val interface{}, index int) {
+	newNode := &Node{Val: val, Next: nil}
 
 	if index <= 0 {
 		newNode.Next = list.Head
@@ -234,7 +242,7 @@ func InsertAtIndex(list *structure.LinkedList, val interface{}, index int) {
 	cur.Next = newNode
 }
 
-func DetectCycle(list *structure.LinkedList) bool {
+func DetectCycle(list *LinkedList) bool {
 	if list.Head == nil {
 		return false
 	}
@@ -253,7 +261,7 @@ func DetectCycle(list *structure.LinkedList) bool {
 	return false
 }
 
-func DetectIntersection(list1, list2 *structure.LinkedList) *structure.Node {
+func DetectIntersection(list1, list2 *LinkedList) *Node {
 	if list1 == nil || list1.Head == nil || list2 == nil || list2.Head == nil {
 		return nil
 	}
@@ -298,7 +306,7 @@ func DetectIntersection(list1, list2 *structure.LinkedList) *structure.Node {
 	return nil
 }
 
-func DetectMiddle(list *structure.LinkedList) *structure.Node {
+func DetectMiddle(list *LinkedList) *Node {
 	if list.Head == nil {
 		return nil
 	}
@@ -314,21 +322,21 @@ func DetectMiddle(list *structure.LinkedList) *structure.Node {
 	return slow
 }
 
-func Clone(ori *structure.LinkedList) *structure.LinkedList {
+func Clone(ori *LinkedList) *LinkedList {
 	if ori == nil || ori.Head == nil {
 		return nil
 	}
 
 	clone := &cloneList{
 		oriList: ori,
-		resList: &structure.LinkedList{Head: nil},
+		resList: &LinkedList{Head: nil},
 	}
 
 	oriCur := ori.Head
-	var resCur *structure.Node
+	var resCur *Node
 
 	for oriCur != nil {
-		resNode := &structure.Node{Val: oriCur.Val, Next: nil}
+		resNode := &Node{Val: oriCur.Val, Next: nil}
 
 		if clone.resList.Head == nil {
 			clone.resList.Head = resNode
