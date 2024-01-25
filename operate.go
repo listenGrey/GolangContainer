@@ -28,7 +28,7 @@ func Constructor(val interface{}) *LinkedList {
 	return &list
 }
 
-func Print(list *LinkedList) {
+func (list *LinkedList) Print() {
 	cur := list.Head
 	for cur != nil && cur.Next != nil {
 		fmt.Printf("%v -> ", cur.Val)
@@ -39,7 +39,7 @@ func Print(list *LinkedList) {
 	}
 }
 
-func Split(list *LinkedList) (*LinkedList, *LinkedList) {
+func (list *LinkedList) Split() (*LinkedList, *LinkedList) {
 	if list.Head == nil || list.Head.Next == nil {
 		return list, nil
 	}
@@ -65,7 +65,7 @@ func Split(list *LinkedList) (*LinkedList, *LinkedList) {
 	return list1, list2
 }
 
-func SearchByValue(list *LinkedList, val interface{}, equals func(interface{}, interface{}) bool) (bool, error) {
+func (list *LinkedList) SearchByValue(val interface{}, equals func(interface{}, interface{}) bool) (bool, error) {
 	if equals == nil {
 		return false, errors.New("need a comparative function")
 	}
@@ -80,7 +80,7 @@ func SearchByValue(list *LinkedList, val interface{}, equals func(interface{}, i
 	return false, nil
 }
 
-func SearchByIndex(list *LinkedList, index int) (*Node, error) {
+func (list *LinkedList) SearchByIndex(index int) (*Node, error) {
 	if index < 0 {
 		return nil, errors.New("index must >= 0")
 	}
@@ -96,7 +96,7 @@ func SearchByIndex(list *LinkedList, index int) (*Node, error) {
 	return cur, nil
 }
 
-func Reverse(list *LinkedList) error {
+func (list *LinkedList) Reverse() error {
 	if list == nil {
 		return errors.New("this is an empty list")
 	}
@@ -114,7 +114,7 @@ func Reverse(list *LinkedList) error {
 	return nil
 }
 
-func RemoveAtHead(list *LinkedList) error {
+func (list *LinkedList) RemoveAtHead() error {
 	if list.Head == nil {
 		return errors.New("this is an empty list")
 	}
@@ -122,7 +122,7 @@ func RemoveAtHead(list *LinkedList) error {
 	return nil
 }
 
-func RemoveAtTail(list *LinkedList) error {
+func (list *LinkedList) RemoveAtTail() error {
 	if list.Head == nil {
 		return errors.New("this is an empty list")
 	}
@@ -138,7 +138,7 @@ func RemoveAtTail(list *LinkedList) error {
 	return nil
 }
 
-func RemoveByIndex(list *LinkedList, index int) error {
+func (list *LinkedList) RemoveByIndex(index int) error {
 	if index < 0 {
 		return errors.New("index must >= 0")
 	}
@@ -163,7 +163,7 @@ func RemoveByIndex(list *LinkedList, index int) error {
 	return nil
 }
 
-func RemoveByValue(list *LinkedList, val interface{}, equals func(interface{}, interface{}) bool) error {
+func (list *LinkedList) RemoveByValue(val interface{}, equals func(interface{}, interface{}) bool) error {
 	if equals == nil {
 		return errors.New("need a comparative function")
 	}
@@ -187,7 +187,7 @@ func RemoveByValue(list *LinkedList, val interface{}, equals func(interface{}, i
 	return nil
 }
 
-func Len(list *LinkedList) int {
+func (list *LinkedList) Len() int {
 	length := 0
 	cur := list.Head
 
@@ -199,12 +199,12 @@ func Len(list *LinkedList) int {
 	return length
 }
 
-func InsertAtHead(list *LinkedList, val interface{}) {
+func (list *LinkedList) InsertAtHead(val interface{}) {
 	newNode := &Node{Val: val, Next: list.Head}
 	list.Head = newNode
 }
 
-func InsertAtTail(list *LinkedList, val interface{}) {
+func (list *LinkedList) InsertAtTail(val interface{}) {
 	newNode := &Node{Val: val, Next: nil}
 	if list.Head == nil { // if input linked list is null, new node is head node
 		list.Head = newNode
@@ -217,7 +217,7 @@ func InsertAtTail(list *LinkedList, val interface{}) {
 	cur.Next = newNode
 }
 
-func InsertAtIndex(list *LinkedList, val interface{}, index int) {
+func (list *LinkedList) InsertAtIndex(val interface{}, index int) {
 	newNode := &Node{Val: val, Next: nil}
 
 	if index <= 0 {
@@ -242,7 +242,7 @@ func InsertAtIndex(list *LinkedList, val interface{}, index int) {
 	cur.Next = newNode
 }
 
-func DetectCycle(list *LinkedList) bool {
+func (list *LinkedList) DetectCycle() bool {
 	if list.Head == nil {
 		return false
 	}
@@ -261,7 +261,7 @@ func DetectCycle(list *LinkedList) bool {
 	return false
 }
 
-func DetectIntersection(list1, list2 *LinkedList) *Node {
+func (list1 *LinkedList) DetectIntersection(list2 *LinkedList) *Node {
 	if list1 == nil || list1.Head == nil || list2 == nil || list2.Head == nil {
 		return nil
 	}
@@ -306,7 +306,7 @@ func DetectIntersection(list1, list2 *LinkedList) *Node {
 	return nil
 }
 
-func DetectMiddle(list *LinkedList) *Node {
+func (list *LinkedList) DetectMiddle() *Node {
 	if list.Head == nil {
 		return nil
 	}
@@ -322,7 +322,7 @@ func DetectMiddle(list *LinkedList) *Node {
 	return slow
 }
 
-func Clone(ori *LinkedList) *LinkedList {
+func (ori *LinkedList) Clone() *LinkedList {
 	if ori == nil || ori.Head == nil {
 		return nil
 	}
