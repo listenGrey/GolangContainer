@@ -19,12 +19,8 @@ type cloneList struct {
 	resList *LinkedList
 }
 
-func New(val interface{}) *LinkedList {
+func New() *LinkedList {
 	var list LinkedList
-	newNode := &Node{Val: val, Next: nil}
-	if list.Head == nil {
-		list.Head = newNode
-	}
 	return &list
 }
 
