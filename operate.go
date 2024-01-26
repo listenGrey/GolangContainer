@@ -19,7 +19,7 @@ type cloneList struct {
 	resList *LinkedList
 }
 
-func Constructor(val interface{}) *LinkedList {
+func New(val interface{}) *LinkedList {
 	var list LinkedList
 	newNode := &Node{Val: val, Next: nil}
 	if list.Head == nil {
@@ -28,90 +28,47 @@ func Constructor(val interface{}) *LinkedList {
 	return &list
 }
 
-func (list *LinkedList) Print() {
+func (list *LinkedList) InsertAtHead(val interface{}) {
+	newNode := &Node{Val: val, Next: list.Head}
+	list.Head = newNode
+}
+
+func (list *LinkedList) InsertAtTail(val interface{}) {
+	newNode := &Node{Val: val, Next: nil}
+	if list.Head == nil { // if input linked list is null, new node is head node
+		list.Head = newNode
+		return
+	}
 	cur := list.Head
-	for cur != nil && cur.Next != nil {
-		fmt.Printf("%v -> ", cur.Val)
+	for cur.Next != nil {
 		cur = cur.Next
 	}
-	if cur.Next == nil {
-		fmt.Printf("%v", cur.Val)
-	}
+	cur.Next = newNode
 }
 
-func (list *LinkedList) Split() (*LinkedList, *LinkedList) {
-	if list.Head == nil || list.Head.Next == nil {
-		return list, nil
-	}
+func (list *LinkedList) InsertAtIndex(val interface{}, index int) {
+	newNode := &Node{Val: val, Next: nil}
 
-	slow := list.Head
-	fast := list.Head
-
-	var preList *Node
-
-	for fast != nil && fast.Next != nil {
-		preList = slow
-		slow = slow.Next
-		fast = fast.Next.Next
-	}
-
-	if preList != nil {
-		preList.Next = nil
-	}
-
-	list1 := &LinkedList{Head: list.Head}
-	list2 := &LinkedList{Head: slow}
-
-	return list1, list2
-}
-
-func (list *LinkedList) SearchByValue(val interface{}, equals func(interface{}, interface{}) bool) (bool, error) {
-	if equals == nil {
-		return false, errors.New("need a comparative function")
+	if index <= 0 {
+		newNode.Next = list.Head
+		list.Head = newNode
+		return
 	}
 
 	cur := list.Head
-	for cur != nil {
-		if equals(cur.Val, val) {
-			return true, nil
-		}
-		cur = cur.Next
-	}
-	return false, nil
-}
-
-func (list *LinkedList) SearchByIndex(index int) (*Node, error) {
-	if index < 0 {
-		return nil, errors.New("index must >= 0")
-	}
-	cur := list.Head
-	for i := 0; cur != nil && i < index; i++ {
+	for i := 0; i < index-1 && cur != nil; i++ {
 		cur = cur.Next
 	}
 
 	if cur == nil {
-		return nil, errors.New("index out of range")
+		for cur = list.Head; cur.Next != nil; cur = cur.Next {
+		}
+		cur.Next = newNode
+		return
 	}
 
-	return cur, nil
-}
-
-func (list *LinkedList) Reverse() error {
-	if list == nil {
-		return errors.New("this is an empty list")
-	}
-	var pre *Node = nil
-	cur := list.Head
-	var next *Node = nil
-
-	for cur != nil {
-		next = cur.Next
-		cur.Next = pre
-		pre = cur
-		cur = next
-	}
-	list.Head = pre
-	return nil
+	newNode.Next = cur.Next
+	cur.Next = newNode
 }
 
 func (list *LinkedList) RemoveAtHead() error {
@@ -187,6 +144,147 @@ func (list *LinkedList) RemoveByValue(val interface{}, equals func(interface{}, 
 	return nil
 }
 
+func (list *LinkedList) MoveToHead(index int) error {
+	if list == nil || list.Head == nil {
+		return errors.New("this is an empty list")
+	}
+	if index < 0 {
+		return errors.New("need correct index")
+	}
+	cur := list.Head
+	var pre *Node
+	for i := 0; i < index && cur != nil; i++ {
+		pre = cur
+		cur = cur.Next
+	}
+
+	if cur != nil {
+		if pre != nil {
+			pre.Next = cur.Next
+			cur.Next = list.Head
+			list.Head = cur
+		}
+		return nil
+	}
+	return errors.New("index out of range")
+}
+
+func (list *LinkedList) MoveToTail(index int) error {
+	if list == nil || list.Head == nil {
+		return errors.New("this is an empty list")
+	}
+	if index < 0 {
+		return errors.New("need correct index")
+	}
+	cur := list.Head
+	var pre *Node
+	for i := 0; i < index && cur != nil; i++ {
+		pre = cur
+		cur = cur.Next
+	}
+
+	if cur != nil {
+		if cur.Next != nil {
+			pre.Next = cur.Next
+			cur.Next = nil
+
+			tail := list.Head
+			for tail.Next != nil {
+				tail = tail.Next
+			}
+			tail.Next = cur
+		}
+		return nil
+	}
+	return errors.New("index out of range")
+}
+
+func (list *LinkedList) SearchByValue(val interface{}, equals func(interface{}, interface{}) bool) (bool, error) {
+	if equals == nil {
+		return false, errors.New("need a comparative function")
+	}
+
+	cur := list.Head
+	for cur != nil {
+		if equals(cur.Val, val) {
+			return true, nil
+		}
+		cur = cur.Next
+	}
+	return false, nil
+}
+
+func (list *LinkedList) SearchByIndex(index int) (*Node, error) {
+	if index < 0 {
+		return nil, errors.New("index must >= 0")
+	}
+	cur := list.Head
+	for i := 0; cur != nil && i < index; i++ {
+		cur = cur.Next
+	}
+
+	if cur == nil {
+		return nil, errors.New("index out of range")
+	}
+
+	return cur, nil
+}
+
+func (list *LinkedList) Print() {
+	cur := list.Head
+	for cur != nil && cur.Next != nil {
+		fmt.Printf("%v -> ", cur.Val)
+		cur = cur.Next
+	}
+	if cur.Next == nil {
+		fmt.Printf("%v", cur.Val)
+	}
+}
+
+func (list *LinkedList) Split() (*LinkedList, *LinkedList) {
+	if list.Head == nil || list.Head.Next == nil {
+		return list, nil
+	}
+
+	slow := list.Head
+	fast := list.Head
+
+	var preList *Node
+
+	for fast != nil && fast.Next != nil {
+		preList = slow
+		slow = slow.Next
+		fast = fast.Next.Next
+	}
+
+	if preList != nil {
+		preList.Next = nil
+	}
+
+	list1 := &LinkedList{Head: list.Head}
+	list2 := &LinkedList{Head: slow}
+
+	return list1, list2
+}
+
+func (list *LinkedList) Reverse() error {
+	if list == nil {
+		return errors.New("this is an empty list")
+	}
+	var pre *Node = nil
+	cur := list.Head
+	var next *Node = nil
+
+	for cur != nil {
+		next = cur.Next
+		cur.Next = pre
+		pre = cur
+		cur = next
+	}
+	list.Head = pre
+	return nil
+}
+
 func (list *LinkedList) Len() int {
 	length := 0
 	cur := list.Head
@@ -199,47 +297,34 @@ func (list *LinkedList) Len() int {
 	return length
 }
 
-func (list *LinkedList) InsertAtHead(val interface{}) {
-	newNode := &Node{Val: val, Next: list.Head}
-	list.Head = newNode
-}
-
-func (list *LinkedList) InsertAtTail(val interface{}) {
-	newNode := &Node{Val: val, Next: nil}
-	if list.Head == nil { // if input linked list is null, new node is head node
-		list.Head = newNode
-		return
-	}
-	cur := list.Head
-	for cur.Next != nil {
-		cur = cur.Next
-	}
-	cur.Next = newNode
-}
-
-func (list *LinkedList) InsertAtIndex(val interface{}, index int) {
-	newNode := &Node{Val: val, Next: nil}
-
-	if index <= 0 {
-		newNode.Next = list.Head
-		list.Head = newNode
-		return
+func (ori *LinkedList) Clone() *LinkedList {
+	if ori == nil || ori.Head == nil {
+		return nil
 	}
 
-	cur := list.Head
-	for i := 0; i < index-1 && cur != nil; i++ {
-		cur = cur.Next
+	clone := &cloneList{
+		oriList: ori,
+		resList: &LinkedList{Head: nil},
 	}
 
-	if cur == nil {
-		for cur = list.Head; cur.Next != nil; cur = cur.Next {
+	oriCur := ori.Head
+	var resCur *Node
+
+	for oriCur != nil {
+		resNode := &Node{Val: oriCur.Val, Next: nil}
+
+		if clone.resList.Head == nil {
+			clone.resList.Head = resNode
+			resCur = clone.resList.Head
+		} else {
+			resCur.Next = resNode
+			resCur = resNode
 		}
-		cur.Next = newNode
-		return
+
+		oriCur = oriCur.Next
 	}
 
-	newNode.Next = cur.Next
-	cur.Next = newNode
+	return clone.resList
 }
 
 func (list *LinkedList) DetectCycle() bool {
@@ -320,34 +405,4 @@ func (list *LinkedList) DetectMiddle() *Node {
 	}
 
 	return slow
-}
-
-func (ori *LinkedList) Clone() *LinkedList {
-	if ori == nil || ori.Head == nil {
-		return nil
-	}
-
-	clone := &cloneList{
-		oriList: ori,
-		resList: &LinkedList{Head: nil},
-	}
-
-	oriCur := ori.Head
-	var resCur *Node
-
-	for oriCur != nil {
-		resNode := &Node{Val: oriCur.Val, Next: nil}
-
-		if clone.resList.Head == nil {
-			clone.resList.Head = resNode
-			resCur = clone.resList.Head
-		} else {
-			resCur.Next = resNode
-			resCur = resNode
-		}
-
-		oriCur = oriCur.Next
-	}
-
-	return clone.resList
 }
