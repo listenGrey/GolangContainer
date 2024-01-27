@@ -281,7 +281,7 @@ func (list *LinkedList) Reverse() error {
 	return nil
 }
 
-func (list *LinkedList) Len() int {
+func (list *LinkedList) Size() int {
 	length := 0
 	cur := list.Head
 
