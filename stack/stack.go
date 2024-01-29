@@ -4,11 +4,15 @@ type Stack struct {
 	items []interface{}
 }
 
-func (s Stack) Push(item interface{}) {
+func New() *Stack {
+	return &Stack{}
+}
+
+func (s *Stack) Push(item interface{}) {
 	s.items = append(s.items, item)
 }
 
-func (s Stack) Pop() interface{} {
+func (s *Stack) Pop() interface{} {
 	if len(s.items) > 0 {
 		return nil
 	}
@@ -18,17 +22,17 @@ func (s Stack) Pop() interface{} {
 	return item
 }
 
-func (s Stack) Peek() interface{} {
+func (s *Stack) Peek() interface{} {
 	if len(s.items) == 0 {
 		return nil
 	}
 	return s.items[len(s.items)-1]
 }
 
-func (s Stack) IsEmpty() bool {
+func (s *Stack) IsEmpty() bool {
 	return len(s.items) == 0
 }
 
-func (s Stack) Size() int {
+func (s *Stack) Size() int {
 	return len(s.items)
 }
