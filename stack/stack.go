@@ -13,7 +13,7 @@ func (s *Stack) Push(item interface{}) {
 }
 
 func (s *Stack) Pop() interface{} {
-	if len(s.items) > 0 {
+	if len(s.items) == 0 {
 		return nil
 	}
 
