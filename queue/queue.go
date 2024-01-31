@@ -8,21 +8,17 @@ func New() *Queue {
 	return &Queue{}
 }
 
-func (q *Queue) Enqueue(item interface{}) {
+func (q *Queue) Push(item interface{}) {
 	q.items = append(q.items, item)
 }
 
-func (q *Queue) Dequeue() interface{} {
-	if len(q.items) == 0 {
-		return nil
+func (q *Queue) Pop() {
+	if len(q.items) > 0 {
+		q.items = q.items[1:]
 	}
-
-	item := q.items[0]
-	q.items = q.items[1:]
-	return item
 }
 
-func (q *Queue) Peek() interface{} {
+func (q *Queue) Front() interface{} {
 	if len(q.items) == 0 {
 		return nil
 	}
