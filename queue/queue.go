@@ -25,6 +25,13 @@ func (q *Queue) Front() interface{} {
 	return q.Items[0]
 }
 
+func (q Queue) Back() interface{} {
+	if len(q.Items) == 0 {
+		return nil
+	}
+	return q.Items[len(q.Items)-1]
+}
+
 func (q *Queue) IsEmpty() bool {
 	return len(q.Items) == 0
 }
