@@ -172,8 +172,23 @@ func (list *LinkedList) MoveToTail(index int) error {
 	if index < 0 {
 		return errors.New("need correct index")
 	}
+	var tar *Node
 	cur := list.Head
-	var pre *Node
+	for i := 0; cur != nil && cur.Next != nil; i++ {
+		if i == index-1 {
+			tar = cur.Next
+			cur.Next = cur.Next.Next
+			tar.Next = nil
+			continue
+		}
+		cur = cur.Next
+	}
+	if tar == nil {
+		return errors.New("index out of range")
+	}
+	cur.Next = tar
+	return nil
+	/*var pre *Node
 	for i := 0; i < index && cur != nil; i++ {
 		pre = cur
 		cur = cur.Next
@@ -192,7 +207,7 @@ func (list *LinkedList) MoveToTail(index int) error {
 		}
 		return nil
 	}
-	return errors.New("index out of range")
+	return errors.New("index out of range")*/
 }
 
 func (list *LinkedList) SearchByValue(val interface{}, equals func(interface{}, interface{}) bool) (bool, error) {
@@ -267,17 +282,17 @@ func (list *LinkedList) Reverse() error {
 	if list == nil {
 		return errors.New("this is an empty list")
 	}
-	var pre *Node = nil
-	cur := list.Head
+	var prev *Node = nil
 	var next *Node = nil
+	cur := list.Head
 
 	for cur != nil {
 		next = cur.Next
-		cur.Next = pre
-		pre = cur
+		cur.Next = prev
+		prev = cur
 		cur = next
 	}
-	list.Head = pre
+	list.Head = prev
 	return nil
 }
 
