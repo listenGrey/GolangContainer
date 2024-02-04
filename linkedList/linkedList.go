@@ -172,42 +172,34 @@ func (list *LinkedList) MoveToTail(index int) error {
 	if index < 0 {
 		return errors.New("need correct index")
 	}
+
 	var tar *Node
 	cur := list.Head
-	for i := 0; cur != nil && cur.Next != nil; i++ {
-		if i == index-1 {
-			tar = cur.Next
-			cur.Next = cur.Next.Next
-			tar.Next = nil
-			continue
+
+	if index == 0 {
+		tar, list.Head = cur, cur.Next
+	} else {
+		for i := 0; i < index-1 && cur.Next != nil; i++ {
+			cur = cur.Next
 		}
-		cur = cur.Next
+		if cur.Next == nil {
+			return errors.New("index out of range")
+		}
+		tar, cur.Next = cur.Next, cur.Next.Next
+		tar.Next = nil
 	}
-	if tar == nil {
-		return errors.New("index out of range")
+
+	if list.Head == nil {
+		list.Head = tar
+	} else {
+		cur = list.Head
+		for cur.Next != nil {
+			cur = cur.Next
+		}
+		cur.Next = tar
 	}
-	cur.Next = tar
+
 	return nil
-	/*var pre *Node
-	for i := 0; i < index && cur != nil; i++ {
-		pre = cur
-		cur = cur.Next
-	}
-
-	if cur != nil {
-		if cur.Next != nil {
-			pre.Next = cur.Next
-			cur.Next = nil
-
-			tail := list.Head
-			for tail.Next != nil {
-				tail = tail.Next
-			}
-			tail.Next = cur
-		}
-		return nil
-	}
-	return errors.New("index out of range")*/
 }
 
 func (list *LinkedList) SearchByValue(val interface{}, equals func(interface{}, interface{}) bool) (bool, error) {
