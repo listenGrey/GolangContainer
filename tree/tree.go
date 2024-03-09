@@ -118,3 +118,77 @@ func (n *Node) Delete(val int) {
 		}
 	}
 }
+
+func (n *Node) IsBalanced() bool {
+	if n == nil {
+		return true
+	}
+	diff := n.Left.subTreeHeight() - n.Right.subTreeHeight()
+	if diff > 1 || diff < -1 {
+		return false
+	}
+	return n.Left.IsBalanced() && n.Right.IsBalanced()
+}
+
+func (n *Node) subTreeHeight() int {
+	if n == nil {
+		return 0
+	}
+	l := n.Left.subTreeHeight()
+	r := n.Right.subTreeHeight()
+	if l > r {
+		return l + 1
+	}
+	return r + 1
+}
+
+func (n *Node) MaxNode() *Node {
+	if n == nil {
+		return nil
+	}
+
+	left := n.Left.MaxNode()
+	right := n.Right.MaxNode()
+
+	if left != nil && left.Val > n.Val {
+		return left
+	} else if right != nil && right.Val > n.Val {
+		return right
+	} else {
+		return n
+	}
+}
+
+func (n *Node) MinNode() *Node {
+	if n == nil {
+		return nil
+	}
+
+	left := n.Left.MinNode()
+	right := n.Right.MinNode()
+
+	if left != nil && left.Val < n.Val {
+		return left
+	} else if right != nil && right.Val < n.Val {
+		return right
+	} else {
+		return n
+	}
+}
+
+func (n *Node) LowestCommonAncestor(p, q *Node) *Node {
+	if n == nil || n == p || n == q {
+		return n
+	}
+
+	left := n.Left.LowestCommonAncestor(p, q)
+	right := n.Right.LowestCommonAncestor(p, q)
+
+	if left != nil && right != nil {
+		return n
+	} else if left != nil {
+		return left
+	} else {
+		return right
+	}
+}
