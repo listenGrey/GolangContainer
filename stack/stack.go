@@ -1,7 +1,7 @@
 package stack
 
 type Stack struct {
-	items []interface{}
+	Items []interface{}
 }
 
 func New() *Stack {
@@ -9,30 +9,30 @@ func New() *Stack {
 }
 
 func (s *Stack) Push(item interface{}) {
-	s.items = append(s.items, item)
+	s.Items = append(s.Items, item)
 }
 
 func (s *Stack) Pop() interface{} {
-	if len(s.items) == 0 {
+	if len(s.Items) == 0 {
 		return nil
 	}
 
-	item := s.items[len(s.items)-1]
-	s.items = s.items[:len(s.items)-1]
+	item := s.Items[len(s.Items)-1]
+	s.Items = s.Items[:len(s.Items)-1]
 	return item
 }
 
 func (s *Stack) Peek() interface{} {
-	if len(s.items) == 0 {
+	if len(s.Items) == 0 {
 		return nil
 	}
-	return s.items[len(s.items)-1]
+	return s.Items[len(s.Items)-1]
 }
 
 func (s *Stack) IsEmpty() bool {
-	return len(s.items) == 0
+	return len(s.Items) == 0
 }
 
 func (s *Stack) Size() int {
-	return len(s.items)
+	return len(s.Items)
 }

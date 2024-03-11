@@ -207,6 +207,10 @@ func (list *LinkedList) SearchByValue(val interface{}, equals func(interface{}, 
 		return false, errors.New("need a comparative function")
 	}
 
+	if list.Head == nil {
+		return false, errors.New("this is an empty list")
+	}
+
 	cur := list.Head
 	for cur != nil {
 		if equals(cur.Val, val) {
@@ -218,6 +222,9 @@ func (list *LinkedList) SearchByValue(val interface{}, equals func(interface{}, 
 }
 
 func (list *LinkedList) SearchByIndex(index int) (*Node, error) {
+	if list.Head == nil {
+		return nil, errors.New("linkedList is nil")
+	}
 	if index < 0 {
 		return nil, errors.New("index must >= 0")
 	}
@@ -271,7 +278,7 @@ func (list *LinkedList) Split() (*LinkedList, *LinkedList) {
 }
 
 func (list *LinkedList) Reverse() error {
-	if list == nil {
+	if list.Head == nil {
 		return errors.New("this is an empty list")
 	}
 	var prev *Node = nil
